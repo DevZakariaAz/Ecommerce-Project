@@ -30,4 +30,4 @@ export const products: Product[] = [{
   imageUrl: 'apron.jpg',
   description: 'Everyone’s a chef in our eco-friendly apron made from 55% organic cotton and 45% recycled polyester. Showcasing your favorite Big Star Collectibles design, the apron is screen-printed in PVC- and phthalate-free inks. Apron measures 24 inches wide by 30 inches long and is easily adjustable around the neck and waist with one continuous strap. Machine-wash warm, tumble-dry low.',
   price: 24,
-}];
+  }];
