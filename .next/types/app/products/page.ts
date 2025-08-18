@@ -1,4 +1,4 @@
-// File: C:\5.Autoformation-Solicode\Frontend\Next.js\ecommerce\app\products\page.tsx
+// File: C:\5.Autoformation-Solicode\Frontend\Next.js\Ecommerce-Project\app\products\page.tsx
 import * as entry from '../../../../app/products/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
