@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator"
 import { Trash2, Plus, Minus, ShoppingBag, ArrowLeft } from 'lucide-react'
 import { useCart } from "@/app/contexts/cart-context"
 import EcommerceHeader from "@/components/ecommerce-header"
+import { products } from "@/lib/product-data"
 
 export default function CartPage() {
   const { items, total, itemCount, updateQuantity, removeItem } = useCart()
@@ -44,7 +45,7 @@ export default function CartPage() {
                     {/* Product Image */}
                     <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                       <Image
-                        src={`/placeholder.svg?height=96&width=96&query=${item.product.name}`}
+                        src={`/` + item.product.imageUrl}
                         alt={item.product.name}
                         fill
                         className="object-cover"
