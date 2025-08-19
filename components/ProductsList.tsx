@@ -7,8 +7,15 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Heart, ShoppingCart, Star } from "lucide-react"
+import { useCart } from "@/app/contexts/cart-context"
 
 export default function ProductsList({ products }: { products: Product[] }) {
+  const { addItem, isInCart, getItemQuantity } = useCart()
+
+  const handleAddToCart = (product: Product) => {
+    addItem(product, 1)
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
@@ -20,7 +27,7 @@ export default function ProductsList({ products }: { products: Product[] }) {
             <Link href={`/products/${product.id}`}>
               <div className="aspect-square overflow-hidden bg-gray-50">
                 <Image
-                  src={'/' + product.imageUrl}
+                  src={'/'+ product.imageUrl}
                   alt={product.name}
                   width={300}
                   height={300}
@@ -65,9 +72,14 @@ export default function ProductsList({ products }: { products: Product[] }) {
                 )}
               </div>
 
-              <Button size="sm" className="gap-2">
+              <Button
+                size="sm"
+                className="gap-2"
+                onClick={() => handleAddToCart(product)}
+                variant={isInCart(product.id) ? "secondary" : "default"}
+              >
                 <ShoppingCart className="h-4 w-4" />
-                Add to Cart
+                {isInCart(product.id) ? `In Cart (${getItemQuantity(product.id)})` : "Add to Cart"}
               </Button>
             </div>
           </CardContent>
