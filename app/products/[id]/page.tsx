@@ -1,4 +1,7 @@
-import { products } from "../../../lib/product-data"
+"use client"
+
+import { useState } from "react"
+import { products } from "@/lib/product-data"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -6,33 +9,45 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Star, Heart, Share2, ShoppingCart, Truck, Shield, RotateCcw } from "lucide-react"
 import Link from "next/link"
+import { useCart } from "@/app/contexts/cart-context"
+import EcommerceHeader from "@/components/ecommerce-header"
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
+  
   const product = products.find((p) => p.id === params.id)
+  
+  const { addItem, isInCart, getItemQuantity } = useCart()
+  const [quantity, setQuantity] = useState(1)
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Product not found</h1>
-          <p className="text-gray-600 mb-6">The product you're looking for doesn't exist.</p>
-          <Link href="/products">
-            <Button>Back to Products</Button>
-          </Link>
+      <div className="min-h-screen bg-gray-50">
+        <EcommerceHeader />
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">Product not found</h1>
+            <p className="text-gray-600 mb-6">The product you're looking for doesn't exist.</p>
+            <Link href="/products">
+              <Button>Back to Products</Button>
+            </Link>
+          </div>
         </div>
       </div>
     )
   }
 
-  // Mock data for enhanced features
   const rating = 4.5
   const reviewCount = 127
   const inStock = true
   const relatedProducts = products.filter((p) => p.id !== product.id).slice(0, 3)
 
+  const handleAddToCart = () => {
+    addItem(product, quantity)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Breadcrumb */}
+      <EcommerceHeader />
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <nav className="flex items-center space-x-2 text-sm text-gray-600">
@@ -51,11 +66,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Images */}
           <div className="space-y-4">
             <div className="aspect-square bg-white rounded-lg border overflow-hidden">
               <Image
-                src={'/' + product.imageUrl}
+                src={'/'+ product.imageUrl}
                 alt={product.name}
                 width={600}
                 height={600}
@@ -69,7 +83,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   className="aspect-square bg-white rounded border overflow-hidden cursor-pointer hover:border-gray-400 transition-colors"
                 >
                   <Image
-                    src={'/' + product.imageUrl}
+                    src={'/'+ product.imageUrl}
                     alt={`${product.name} view ${i}`}
                     width={150}
                     height={150}
@@ -80,7 +94,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             </div>
           </div>
 
-          {/* Product Info */}
           <div className="space-y-6">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
@@ -112,17 +125,29 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             <Separator />
 
-            {/* Add to Cart Section */}
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
                 <div className="flex items-center border rounded-lg">
-                  <button className="px-3 py-2 hover:bg-gray-100">-</button>
-                  <span className="px-4 py-2 border-x">1</span>
-                  <button className="px-3 py-2 hover:bg-gray-100">+</button>
+                  <button
+                    className="px-3 py-2 hover:bg-gray-100"
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  >
+                    -
+                  </button>
+                  <span className="px-4 py-2 border-x">{quantity}</span>
+                  <button className="px-3 py-2 hover:bg-gray-100" onClick={() => setQuantity(quantity + 1)}>
+                    +
+                  </button>
                 </div>
-                <Button size="lg" className="flex-1" disabled={!inStock}>
+                <Button
+                  size="lg"
+                  className="flex-1"
+                  disabled={!inStock}
+                  onClick={handleAddToCart}
+                  variant={isInCart(product.id) ? "secondary" : "default"}
+                >
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  Add to Cart
+                  {isInCart(product.id) ? `In Cart (${getItemQuantity(product.id)})` : "Add to Cart"}
                 </Button>
                 <Button variant="outline" size="lg">
                   <Heart className="w-5 h-5" />
@@ -138,7 +163,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             <Separator />
 
-            {/* Features */}
             <div className="grid grid-cols-1 gap-4">
               <div className="flex items-center space-x-3 text-sm text-gray-600">
                 <Truck className="w-5 h-5" />
@@ -156,7 +180,6 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
         </div>
 
-        {/* Related Products */}
         <div className="mt-16">
           <h2 className="text-2xl font-bold text-gray-900 mb-8">Related Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -165,7 +188,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                 <CardContent className="p-0">
                   <div className="aspect-square bg-gray-100 rounded-t-lg overflow-hidden">
                     <Image
-                      src={'/' + relatedProduct.imageUrl}
+                      src={`/`+ relatedProduct.imageUrl}
                       alt={relatedProduct.name}
                       width={300}
                       height={300}
