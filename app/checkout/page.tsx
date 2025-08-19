@@ -89,7 +89,7 @@ export default function CheckoutPage() {
                       type="email"
                       value={formData.email}
                       onChange={(e) => handleInputChange("email", e.target.value)}
-                      placeholder="john@example.com"
+                      placeholder="zakaria@example.com"
                       required
                     />
                   </div>
@@ -314,7 +314,7 @@ export default function CheckoutPage() {
                     <div key={item.id} className="flex items-center gap-4">
                       <div className="relative w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
                         <Image
-                          src={`/placeholder.svg?height=64&width=64&query=${item.product.name}`}
+                          src={`/` + item.product.imageUrl}
                           alt={item.product.name}
                           fill
                           className="object-cover"
